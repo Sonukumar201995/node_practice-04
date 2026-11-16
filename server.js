@@ -5,8 +5,17 @@ const Staff = require("./models/Staff");
 const express = require("express");
 const app = express();
 
-// Middleware
+// body-parser Middleware
 app.use(express.json());
+
+
+// login time middleware
+
+const logRequest = (req, res, next) => {
+    console.log(`${new Date().toLocaleString()} Request Method: ${req.method} URL: ${req.originalUrl}`);
+    next();
+};
+app.use(logRequest)
 
 // Home Route
 app.get("/", (req, res) => {
@@ -15,7 +24,6 @@ app.get("/", (req, res) => {
 
 
 // post api
-
 app.post("/staff",async(req,res)=>{
        try
        {
@@ -32,7 +40,6 @@ app.post("/staff",async(req,res)=>{
         res.status(500).json({error: "internal server error"})
        }
 })
-
 // get api
 app.get("/staff",async(req,res)=>{
 
@@ -48,10 +55,7 @@ app.get("/staff",async(req,res)=>{
         res.status(500).json({error :"internal server error"})
     }
 })
-
-
 // updata api
-
 app.put("/staff/:id", async (req, res) => {
     try {
         const staffId = req.params.id;
@@ -80,9 +84,7 @@ app.put("/staff/:id", async (req, res) => {
         });
     }
 });
-
 // delete api
-
 app.delete("/staff/:id",async(req,res)=>{
     try
     {
@@ -103,6 +105,28 @@ app.delete("/staff/:id",async(req,res)=>{
     }
 })
 
+// parameter get api
+
+app.get("/staff/:role",async(req,res)=>{
+        try
+        {
+            const role=req.params.role;
+            if(role==='Librarian' || role==='Assistant' || role==='Accountant' || role==='Security' || role==='Other')
+            {
+                const response=await Staff.find({profile:role});
+                console.log("data fetch");
+                res.status(200).json(response)
+            }else
+            {
+                res.status(404).json({error:"invailid role"})
+            }
+        }
+        catch(error)
+        {
+            console.log(error);
+            res.status(500).json({error :"internal server error"})
+        } 
+})
 // Server
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
