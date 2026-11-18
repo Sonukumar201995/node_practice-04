@@ -6,9 +6,14 @@ const app = express();
 
 // Import Router
 const StaffRouter = require("./routes/StaffRouter");
+//passport 
+const passport = require("./auth");
+app.use(passport.initialize());
+const local = passport.authenticate("local", {session: false});
 
 // Body Parser Middleware
 app.use(express.json());
+
 
 // Logging Middleware
 const logRequest = (req, res, next) => {
@@ -24,7 +29,7 @@ app.use(logRequest);
 app.use("/", StaffRouter);
 
 // Home Route
-app.get("/", (req, res) => {
+app.get("/", local,(req, res) => {
     res.send("Welcome to our Library Management System");
 });
 
