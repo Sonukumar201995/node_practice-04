@@ -29,7 +29,7 @@ app.use(logRequest);
 app.use("/", StaffRouter);
 
 // Home Route
-app.get("/", local,(req, res) => {
+app.get("/",local,(req, res) => {
     res.send("Welcome to our Library Management System");
 });
 

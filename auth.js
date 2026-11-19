@@ -17,7 +17,7 @@ passport.use(
             }
 
             // Plain password comparison
-            const isPasswordMatch = password === user.password;
+             const isPasswordMatch = await user.comparePassword(password);
 
             if (!isPasswordMatch) {
                 return done(null, false, {
